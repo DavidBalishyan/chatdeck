@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from "react";
+import { motion } from "framer-motion";
 
-type Platform = 'twitch' | 'youtube' | 'kick';
+type Platform = "twitch" | "youtube" | "kick";
 
 interface Props {
   usernameOrId: string;
@@ -9,16 +9,20 @@ interface Props {
   onReset: () => void;
 }
 
-export const ChatViewer: React.FC<Props> = ({ usernameOrId, platform, onReset }) => {
+export const ChatViewer: React.FC<Props> = ({
+  usernameOrId,
+  platform,
+  onReset,
+}) => {
   const parent = window.location.hostname;
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  let chatUrl = '';
-  if (platform === 'twitch') {
+  let chatUrl = "";
+  if (platform === "twitch") {
     chatUrl = `https://www.twitch.tv/embed/${usernameOrId}/chat?parent=${parent}`;
-  } else if (platform === 'youtube') {
+  } else if (platform === "youtube") {
     chatUrl = `https://www.youtube.com/live_chat?v=${usernameOrId}&embed_domain=${parent}`;
-  } else if (platform === 'kick') {
+  } else if (platform === "kick") {
     chatUrl = `https://kick.com/embed/chat/${usernameOrId}`;
   }
 
@@ -41,7 +45,7 @@ export const ChatViewer: React.FC<Props> = ({ usernameOrId, platform, onReset })
       animate={{ scale: 1 }}
     >
       <h2 className="text-xl font-bold mb-4 capitalize">
-        {platform} Chat {platform !== 'youtube' && `for @${usernameOrId}`}
+        {platform} Chat {platform !== "youtube" && `for @${usernameOrId}`}
       </h2>
       <iframe
         ref={iframeRef}
@@ -70,6 +74,19 @@ export const ChatViewer: React.FC<Props> = ({ usernameOrId, platform, onReset })
           Change Platform/Username
         </motion.button>
       </div>
+      {platform === "kick" && (
+        <p className="text-yellow-400 text-sm text-center mb-2">
+          ⚠️ Kick chat embeds may fail even if the streamer is live.
+          <a
+            href={`https://kick.com/${usernameOrId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline ml-1"
+          >
+            Open chat directly
+          </a>
+        </p>
+      )}
     </motion.div>
   );
 };
